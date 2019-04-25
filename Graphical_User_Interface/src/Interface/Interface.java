@@ -84,9 +84,9 @@ public class Interface extends JFrame{
 		//welcome_panel.setBackground(Color.WHITE); //Fond blanc comme le logo mais le fond par défaut est mieux
 		
 		//Question 1 page
-		JPanel qu1_panel = new JPanel();
-		qu1_panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		qu1_panel.setLayout(null);
+		JPanel qus_panel = new JPanel();
+		qus_panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		qus_panel.setLayout(null);
 		
 		final CardLayout cardLayout = (CardLayout) contentPane.getLayout();
 		
@@ -133,8 +133,8 @@ public class Interface extends JFrame{
 		
 		//Start Button
 		JButton button_start = new JButton("Start");
-		button_start.setFont(new Font("Bitstream Charter", Font.BOLD, 30));
-		button_start.setBounds(170, 450, 150, 60);
+		button_start.setFont(new Font("Bitstream Charter", Font.BOLD, 25));
+		button_start.setBounds(40, 470, 150, 50);
 		button_start.setForeground(Color.WHITE);
 		button_start.setBackground(Color.getHSBColor(0.56f, 1.0f, 0.4f));
 		button_start.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -143,8 +143,8 @@ public class Interface extends JFrame{
 		
 		//Load Button
 		JButton button_load = new JButton("Load project");
-		button_load.setFont(new Font("Bitstream Charter", Font.BOLD, 30)); 	
-		button_load.setBounds(470, 450, 200,60);	
+		button_load.setFont(new Font("Bitstream Charter", Font.BOLD, 25)); 	
+		button_load.setBounds(400, 470, 160,50);	
 		button_load.setForeground(Color.WHITE);
 		button_load.setBackground(Color.getHSBColor(0.56f, 1.0f, 0.4f));
 		button_load.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -253,7 +253,7 @@ public class Interface extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 
 				frame.setTitle("CeSort - Question 1 ");
-				cardLayout.show(contentPane, "qu1");
+				cardLayout.show(contentPane, "qus");
 
 			}
 		});
@@ -267,25 +267,44 @@ public class Interface extends JFrame{
 		});
 						
 
-		/*						Questions 					*/
+		/*********************		Questions 	*******************/
 		
 		
 		//Home Button
 		JButton button_home = new JButton("Home");
-		button_home.setFont(new Font("Bitstream Charter", Font.BOLD, 30)); 	
-		button_home.setBounds(600, 450, 200,60);	
+		button_home.setFont(new Font("Bitstream Charter", Font.BOLD, 25)); 	
+		button_home.setBounds(630, 470, 150,50);	
 		button_home.setForeground(Color.WHITE);
 		button_home.setBackground(Color.getHSBColor(0.56f, 1.0f, 0.4f));
 		button_home.setBorder(BorderFactory.createLineBorder(Color.black));
-		qu1_panel.add(button_home);
-
+		qus_panel.add(button_home);
 		
+		//Previous Button
+		JButton previous_home = new JButton("Previous");
+		previous_home.setFont(new Font("Bitstream Charter", Font.BOLD, 25)); 	
+		previous_home.setBounds(50, 470, 150,50);	
+		previous_home.setForeground(Color.WHITE);
+		previous_home.setBackground(Color.getHSBColor(0.56f, 1.0f, 0.4f));
+		previous_home.setBorder(BorderFactory.createLineBorder(Color.black));
+		qus_panel.add(previous_home);
+
+
+		//Next Button
+		JButton next_home = new JButton("Next");
+		next_home.setFont(new Font("Bitstream Charter", Font.BOLD, 30)); 	
+		next_home.setBounds(300, 470, 150,50);	
+		next_home.setForeground(Color.WHITE);
+		next_home.setBackground(Color.getHSBColor(0.56f, 1.0f, 0.4f));
+		next_home.setBorder(BorderFactory.createLineBorder(Color.black));
+		qus_panel.add(next_home);
+
+
 		//Label CeSort title 
 		JLabel jcesort1 = new JLabel("CeSort");
 		jcesort1.setForeground(Color.DARK_GRAY);
 		jcesort1.setFont(new Font("Bitstream Charter", Font.BOLD , 60));
 		jcesort1.setBounds(40, 40, 300, 80);
-		qu1_panel.add(jcesort1) ;
+		qus_panel.add(jcesort1) ;
 		
 		//Logo CeSort
 		InputStream icone2 = getClass().getResourceAsStream("/Images/Logo-STAR.jpg");
@@ -295,16 +314,21 @@ public class Interface extends JFrame{
         ImageIcon icone3 = new ImageIcon(newimage1) ;
 		JLabel image2 = new JLabel(icone3);
 		image2.setBounds(450,20,70,40);
-        qu1_panel.add(image2);
-        
-        
+        qus_panel.add(image2);
         
         //Previous choices title
 		JLabel jprevious = new JLabel("Your previous choices :");
 		jprevious.setForeground(Color.DARK_GRAY);
 		jprevious.setFont(new Font("Bitstream Charter", Font.BOLD , 20));
 		jprevious.setBounds(600, 20, 300, 80);
-		qu1_panel.add(jprevious) ;
+		qus_panel.add(jprevious) ;
+		
+		//Question number + The question
+		JLabel jquestion = new JLabel("Question 1 : xxxxxxxx");
+		jquestion.setForeground(Color.DARK_GRAY);
+		jquestion.setFont(new Font("Bitstream Charter", Font.BOLD , 20));
+		jquestion.setBounds(20, 100, 200, 80);
+		qus_panel.add(jquestion) ;
         
 		// Start Button
 		button_home.addActionListener(new ActionListener() {
@@ -318,7 +342,7 @@ public class Interface extends JFrame{
 		
 		//Global
 		contentPane.add(welcome_panel, "welcome");
-		contentPane.add(qu1_panel, "qu1");
+		contentPane.add(qus_panel, "qus");
 		//contentPane.add(panel_modif, "modif");
 
 	}
