@@ -43,6 +43,11 @@ public class Questions {
 		return tab_questions[index] ;
 	}
 	
+	//Get an answer from the question index
+		public String get_answer(int index) {
+			return tab_answers[index] ;
+		}
+	
 	//Get the number of questions
 	public int get_nb_questions() {
 		return SIZE ;

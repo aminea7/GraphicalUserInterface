@@ -59,7 +59,9 @@ import java.awt.Dimension;
 public class Interface extends JFrame{
 	private static JPanel contentPane;
 	static Interface frame;
-	public int num_page = 0 ;	//Current question page number
+	public int num_page = 1 ;	//Current question page number
+	public int num_pageMax = 1 ;	//The question page number max the client answered
+
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -74,6 +76,8 @@ public class Interface extends JFrame{
 			}
 		});
 	}
+	
+	
 
 	public Interface() throws IOException{
 		
@@ -113,6 +117,8 @@ public class Interface extends JFrame{
 		
 
 		/****************************** welcome_panel ***************************************/
+		/*																					*/
+		/************************************************************************************/
 
 		
 		//Label title CeSort
@@ -295,6 +301,8 @@ public class Interface extends JFrame{
 						
 
 		/*********************		Questions Panel     	*******************/
+		/*															    	*/
+		/**********************************************************************/
 		
 		//Logo CeSort
 		FileInputStream icone2 = new FileInputStream("Images/Logo-STAR.jpg");
@@ -339,10 +347,6 @@ public class Interface extends JFrame{
 		jta_list_answers.setFont(new Font("Bitstream Charter", Font.PLAIN, 19));
 
 		
-		
-		
-		
-		
 		/*
 		//Previous choices title
 		JLabel jerror3 = new JLabel("TEST xxxxxxxxxxxxxxxxxxxx:");
@@ -367,8 +371,7 @@ public class Interface extends JFrame{
 		button_home.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				num_page = 1 ; 	//Increment the num_page
-				
+				num_page = 1 ; 	//Initialize the page number				
 				frame.setTitle("CeSort "); 			//Initial frame title 
 				cardLayout.show(contentPane, "welcome");
 
@@ -385,18 +388,6 @@ public class Interface extends JFrame{
 		button_finish.setVisible(false);
 		qus_panel.add(button_finish);
 		
-		//Finish Button Listener --> Go to the results page
-		button_finish.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				num_page = 1 ; 	//Increment the num_page
-				frame.setTitle("CeSort - Results "); 			 
-				cardLayout.show(contentPane, "results");	
-
-			}
-		});
-
-		
 		//Next Button
 		JButton button_next = new JButton("Next");
 		button_next.setFont(new Font("Bitstream Charter", Font.BOLD, 30)); 	
@@ -405,40 +396,6 @@ public class Interface extends JFrame{
 		button_next.setBackground(Color.getHSBColor(0.56f, 1.0f, 0.4f));
 		button_next.setBorder(BorderFactory.createLineBorder(Color.black));
 		qus_panel.add(button_next);
-
-		//Next Button Listener
-		button_next.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				//Test if there is a next page 
-				if (num_page<(nb_questions-1)) {
-					
-					//We retrieve the answer 		
-					String answer = janswer.getText() ;
-					questions.set_answer(num_page, answer); //We save it
-					//We actualize the list of answer at the right of the screen
-					String Newline=System.getProperty("line.separator");
-					jta_list_answers.setText(jta_list_answers.getText()+questions.get_question(num_page)+Newline+answer+Newline+Newline);
-					
-					num_page ++ ; 	//Increment the num_page
-					jquestion.setText("Question "+num_page+" : "+questions.get_question(num_page)); //Update the title 
-					frame.setTitle("CeSort - Question "+num_page); //Actualize the title frame
-					cardLayout.show(contentPane, "qus");
-
-					
-				}
-				if (num_page==(nb_questions-1)) { //If there is no next question
-				
-					//We replace the next button with the finish button
-					button_next.setVisible(false);	
-					button_finish.setVisible(true);	
-				}	
-				janswer.setText("");  	//Clear the answer area
-
-			
-			}
-		});
-		
 		
 		//Previous Button
 		JButton button_previous = new JButton("Previous");
@@ -447,30 +404,117 @@ public class Interface extends JFrame{
 		button_previous.setForeground(Color.WHITE);
 		button_previous.setBackground(Color.getHSBColor(0.56f, 1.0f, 0.4f));
 		button_previous.setBorder(BorderFactory.createLineBorder(Color.black));
+		button_previous.setVisible(false) ;		//Initially,it's the first question so there is no previous questionn 
 		qus_panel.add(button_previous);
+
+		//Next Button Listener
+		button_next.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				//If the client forgot to answer
+				if (janswer.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Please insert an answert!", "Error", 0);
+				}
+				else {
+					//Test if there is a next page 
+					if (num_page<(nb_questions-1)) {
+						
+						String answer = janswer.getText() ;	    //We retrieve the answer 		 
+						questions.set_answer(num_page, answer); //We save it
+						actualize_answers(jta_list_answers,questions) ;	 				//Actualize the answers	
+						
+						button_previous.setVisible(true) ;		//As we are not at the first question, we can go back
+						num_page ++ ; 							//Increment the num_page
+						jquestion.setText("Question "+num_page+" : "+questions.get_question(num_page)); //Update the title 
+						frame.setTitle("CeSort - Question "+num_page); //Actualize the title frame
+						cardLayout.show(contentPane, "qus");
+						
+						
+						//We actualize the number page max, for the case where we click on previous we have to save the progress with this variable 
+						if (num_page>num_pageMax ) {
+							num_pageMax = num_page ;
+						}
+						
+					}
+					if (num_page==(nb_questions-1)) { //If there is no next question
+					
+						//We replace the next button with the finish button
+						button_next.setVisible(false);	
+						button_finish.setVisible(true);	
+					}	
+					
+					//Clear the answer zone or reinsert the answer that was there
+					if (num_page<=num_pageMax) {	//The client already answered this question
+						janswer.setText(questions.get_answer(num_page));  	//Clear the answer area
+						
+					}
+					else { //It's the first he see this question
+						janswer.setText("");  	//Clear the answer area
+					}
+				}
+
+			}
+		});
+		
+		
 		 
 		//Previous Button Listener
 		button_previous.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent e) {
 			
-			//Test if there is a previous page
-			if (num_page>1) {
+			//If the client forgot to answer this question
+			if (janswer.getText().isEmpty()) {
+				
+				//JOptionPane.showMessageDialog(null, "Please insert an answer!", "Error", 1);
 				num_page -- ; 	//Decrement the num_page
+				num_pageMax -- ;
 				jquestion.setText("Question "+num_page+" : "+questions.get_question(num_page)); //Update the number and content of the question
+				janswer.setText(questions.get_answer(num_page));  	//The answered that was entered
 				frame.setTitle("CeSort - Question "+num_page); //Actualize the title frame
 				cardLayout.show(contentPane, "qus"); 
 				
 				//If the finish button is visible, we make sure that it's the next button instead
 				button_next.setVisible(true);	
 				button_finish.setVisible(false);
-				
 			}
-			else if (num_page==1) { //If we are already at the first page
-				
-				JOptionPane.showMessageDialog(null, "There is no previous question!", "Error", 0);
+			else {	
+				//Test if there is a previous page
+				if (num_page>1) {
+					
+					
+					String answer = janswer.getText() ;	    //We retrieve the answer 		 
+					questions.set_answer(num_page, answer); //We save it
+					actualize_answers(jta_list_answers,questions) ;	 	//Actualize the answers	
+
+					num_page -- ; 	//Decrement the num_page
+					jquestion.setText("Question "+num_page+" : "+questions.get_question(num_page)); //Update the number and content of the question
+					janswer.setText(questions.get_answer(num_page));  	//Clear the answer area
+
+					frame.setTitle("CeSort - Question "+num_page); //Actualize the title frame
+					cardLayout.show(contentPane, "qus"); 
+					
+					//If the finish button is visible, we make sure that it's the next button instead
+					button_next.setVisible(true);	
+					button_finish.setVisible(false);
+					
+				}
+				if (num_page==1) { //If we are already at the first page
+					//JOptionPane.showMessageDialog(null, "There is no previous question!", "Error", 0);
+					button_previous.setVisible(false);	//We can't go back, it's the first page
+
+				}				
+				}
 			}
-			janswer.setText("");  	//Clear the answer area
-			
+		});
+
+		//Finish Button Listener --> Go to the results page
+		button_finish.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				num_page = 1 ; 	//Initialiaze the num_page
+				frame.setTitle("CeSort - Results "); 			 
+				cardLayout.show(contentPane, "results");	
+
 			}
 		});
 
@@ -488,17 +532,28 @@ public class Interface extends JFrame{
 		contentPane.add(welcome_panel, "welcome");
 		contentPane.add(qus_panel, "qus");
 		contentPane.add(results_panel, "results");
-
-
-	}
-	
-	
-	public void actualization_answers() {
 		
-		for (int i=0; i<num_page; i++) {
-			
-		}
+		
+		
+
+
 	}
+	
+	
+	public void actualize_answers(JTextArea jta_list_answers, Questions questions) {
+		
+		String Newline=System.getProperty("line.separator");
+		jta_list_answers.setText("") ;
+		for (int i=1; i<(num_pageMax+1); i++) {
+			jta_list_answers.setText(jta_list_answers.getText()+questions.get_question(i)+Newline+questions.get_answer(i)+Newline+Newline);
+
+		}
+		//jta_list_answers.setText(jta_list_answers.getText()+questions.get_question(num_page)+Newline+answer+Newline+Newline);
+
+	}
+	
+	
+	
 
 }
 	
