@@ -1,6 +1,6 @@
-kindOfOrganisation(oem).
+kindOfOrganisation(motorist).
 kindOfProduct(aircraft).
-headOfficeInEU(yes).
+headOfficeInEU(_).
 weight(_).
 standardPart(_).
 mainResponsabilities(_).
@@ -8,5 +8,5 @@ typeCertificate(no).
 requestModification(no).
 nextTarget(designApproval).
 requestModificationOrNewProgram(_).
-privilegeFromEASA(no).
-operationalConditionsMightBeRestricted(no).
+privilegeFromEASA(_).
+operationalConditionsMightBeRestricted(_).

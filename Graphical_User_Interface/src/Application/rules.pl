@@ -278,7 +278,5 @@ scenario(0) :-
     privilegeFromEASA(no),
     operationalConditionsMightBeRestricted(yes).
 
-test(ok).
-
 reasoner(X) :- nextQuestion(X).
 reasoner(X) :- scenario(X).
