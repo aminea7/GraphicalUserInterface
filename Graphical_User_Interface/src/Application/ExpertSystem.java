@@ -62,6 +62,12 @@ public class ExpertSystem {
     	 }
  	}
 
+    
+    public void resetKnowledge() {
+    	for(int i = 0; i < NBCRITERIA; i++) {
+    		this.knowledge[1][i] = "_";
+    	 }
+    }
 	/* * * * * M E T H O D S * * * * */
 	
 	/**
@@ -121,7 +127,7 @@ public class ExpertSystem {
 	/**
 	 * Return the first answer of the predicate.
 	 */
-	private String reason(String predicate) throws PrologException, NoAnswerException
+	public String reason() throws PrologException, NoAnswerException
 	{
 		this.writeKnowledge();
 		this.setup();
@@ -131,7 +137,7 @@ public class ExpertSystem {
 		// Create the arguments to the compound term which is the question
 		Term[] args = { answerTerm };
 		// Construct the question
-		CompoundTerm goalTerm = new CompoundTerm(AtomTerm.get(predicate), args);
+		CompoundTerm goalTerm = new CompoundTerm(AtomTerm.get("reasoner"), args);
 		// Create the answer
 		String answer = null;
 
@@ -168,6 +174,7 @@ public class ExpertSystem {
 
 	/* * * * * M A I N * * * * */
 	
+	// Test the ExpertSystem class with an example
 	public static void main(String[] args)
 	{
 		ExpertSystem expertSystem = new ExpertSystem();
@@ -176,9 +183,9 @@ public class ExpertSystem {
 		{	
 			// Exemple de raisonnement de ExpertSystem
 			// // Au début, il faut poser la q° sur kindOfOrganisation
-			String reasoning = expertSystem.reason("reasoner");
+			String reasoning = expertSystem.reason();
 			// If reasoning matches the regex [0-9]
-			boolean scenarioFound = reasoning.matches("\\d");
+			boolean scenarioFound = reasoning.matches("\\d+");
 			if(scenarioFound) {
 				// resultView
 				int scenario = Integer.parseInt(reasoning);

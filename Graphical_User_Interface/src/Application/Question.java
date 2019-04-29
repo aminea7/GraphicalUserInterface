@@ -14,7 +14,7 @@ public class Question {
 	
 	/* * * * * C O N S T R U C T O R * * * * */
 	
-	public Question (String pTitle, HashMap<String, String> pAnswers) {
+	private Question (String pTitle, HashMap<String, String> pAnswers) {
 		this.title = pTitle;
 		this.answers = pAnswers;
 	}
@@ -122,7 +122,7 @@ public class Question {
 		return title;
 	}
 
-	public  HashMap<String, String> getAnswers() {
+	public HashMap<String, String> getAnswers() {
 		return answers;
 	}
 }
