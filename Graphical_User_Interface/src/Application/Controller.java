@@ -25,18 +25,17 @@ public class Controller {
 	
 	/* * * * * M E T H O D S * * * * */
 	
-	public Question button_start() {
+	public void button_start() {
 		Question firstQuestion = null;
 		try {
 			String result = expertSystem.reason();
 			firstQuestion = questions.get(result);
 			keyCurrentQuestion = result;
 			// TODO: Fermer WelcomeView
-			// TODO : Lancer QuestionView
+			// TODO : Lancer QuestionView(firstQuestion)
 		} catch (PrologException | NoAnswerException e) {
 			e.printStackTrace();
 		}
-		return firstQuestion;
 	}
 	
 	public Question button_next(String keyAnswer) {
@@ -47,6 +46,7 @@ public class Controller {
 			boolean scenarioFound = result.matches("\\d+");
 			if(scenarioFound) {
 				int scenario = Integer.parseInt(result);
+				// TODO: Récupérer les docs du scenario dans Model
 				// TODO: Lancer ResultView
 			} else {
 				nextQuestion = questions.get(result);
