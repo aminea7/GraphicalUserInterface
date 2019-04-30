@@ -7,20 +7,27 @@ import gnu.prolog.vm.PrologException;
 
 enum Language {FR,EN};
 enum View {Welcome, Question, Result, Resources};
+enum Resource {Schedule, Chart, ReqList, ReqModel, ProcModel};
+int NUMBER_OF_RESOURCES = 6;
 
 public class Controller {
 	
 	/* * * * * A T T R I B U T E S * * * * */
 	
-	private ExpertSystem expertSystem;
-	
+	//The list of all available questions
 	private HashMap<String, Question> questions;
+	//All the answers provided until now, the key is the key of the question that they correspond to
+	private HashMap<String, String> answers;
 	private String keyCurrentQuestion;
-	
+	//Contains the representation of the resources to be displayed on resultView
+	//To be changed when the format of the resources is settled
+	private String[] resources;
+	private ExpertSystem expertSystem;
 	private WelcomeView welcomeView;
 	private QuestionView questionView;
 	private ResultView resultView;
 	private ResourcesView resourcesView;
+	private Model model;
 	private View currentView;
 	
 	/* * * * * C O N S T R U C T O R * * * * */
@@ -31,6 +38,9 @@ public class Controller {
 		questionView = new QuestionView();
 		resultView = new ResultView();
 		resourcesView = new ResourcesView();
+		model = new Model();
+		answers = new HashMap<String,String>();
+		resources = new String[NUMBER_OF_RESOURCES];
 		questions = Question.getQuestions();
 		keyCurrentQuestion = null;
 		welcomeView.startWelcomeView();
@@ -43,7 +53,7 @@ public class Controller {
 	public void startQuestionnaire() {
 		Question firstQuestion = null;
 		try {
-			//Gets the first question (root of the questionnaire
+			//Gets the first question (root of the questionnaire)
 			String result = expertSystem.reason();
 			firstQuestion = questions.get(result);
 			keyCurrentQuestion = result;
@@ -59,16 +69,22 @@ public class Controller {
 	//Used by the questionnaire to get the next question and refresh the view to display it
 	public Question nextQuestion(String keyAnswer) {
 		Question nextQuestion = null;
+		//Saves the answer to the previous question
+		answers.put(keyCurrentQuestion, keyAnswer);
 		try {
 			expertSystem.setKnowledge(keyCurrentQuestion, keyAnswer);
 			String result = expertSystem.reason();
 			boolean scenarioFound = result.matches("\\d+");
+			//When the questionnaire is finished
 			if(scenarioFound) {
 				int scenario = Integer.parseInt(result);
-				// TODO: R�cup�rer les docs du scenario dans Model
-				// TODO: Lancer ResultView
+				//Retrieving the resources
+				resources = Model.getModels(scenario);
+				//Displaying resultView
+				questionView.closeQuestionView();
 				resultView.startResultView();
 				currentView = View.Result;
+			//Otherwise, we proceed to next question
 			} else {
 				nextQuestion = questions.get(result);
 				keyCurrentQuestion = result;
@@ -94,6 +110,7 @@ public class Controller {
 	}
 	
 	public void displayHome() {
+		//Closes the current view
 		switch (currentView) {
 		case Question:
 			questionView.closeQuestionView();
@@ -105,15 +122,58 @@ public class Controller {
 			resourcesView.closeResourcesView();
 			break;
 		}
+		//Opens welcome view and resets questionnaire
 		welcomeView.startWelcomeView();
 		currentView = View.Welcome;
 		expertSystem.resetKnowledge();
 	}
 	
+	//Called upon clicking on an answer in the list of previous questions displayed during the questionnaire
+	public Question editAnswer(String keyQuestion) {
+		keyCurrentQuestion = keyQuestion;
+		return questions.get(keyQuestion);
+	}
+	
 	public void changeLanguage() {
 		//TODO
 	}
-
+	
+	//Used when clicking save on the results view, allows the user to specify
+	//a place where the project has to be saved.
+	//Creates a specific file taht contains the data of the ExpertSystem
+	public void saveResults() {
+		//TODO
+	}
+	
+	//Used when clicking on download on the results view
+	//Downloads all resources in a zip archive
+	public void downloadResources() {
+		//TODO
+	}
+	
+	//Used by result view when choosing to display one of the resources
+	public String displayResource(Resource r) {
+		String ret = "";
+		switch (r) {
+		case Schedule:
+			ret = resources[0];
+			break;
+		case Chart:
+			ret = resources[1];
+			break;
+		case ReqList:
+			ret = resources[2];
+			break;
+		case ReqModel:
+			ret = resources[3];
+			break;
+		case ProcModel:
+			ret = resources[4];
+			break;
+		//One is missing ??
+		}
+		return ret;
+	}
 }
 
 
