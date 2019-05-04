@@ -4,11 +4,13 @@ import java.util.HashMap;
 
 import gnu.prolog.demo.mentalarithmetic.NoAnswerException;
 import gnu.prolog.vm.PrologException;
+import net.sf.mpxj.ProjectFile;
+import net.sf.mpxj.explorer.ProjectFilePanel;
 
 enum Language {FR,EN};
 enum View {Welcome, Question, Result, Resources};
 enum Resource {Schedule, Chart, ReqList, ReqModel, ProcModel};
-int NUMBER_OF_RESOURCES = 6;
+int NUMBER_OF_RESOURCES = 5;
 
 public class Controller {
 	
@@ -22,6 +24,7 @@ public class Controller {
 	//Contains the representation of the resources to be displayed on resultView
 	//To be changed when the format of the resources is settled
 	private String[] resources;
+	private ProjectFile schedule;
 	private ExpertSystem expertSystem;
 	private WelcomeView welcomeView;
 	private QuestionView questionView;
@@ -79,7 +82,9 @@ public class Controller {
 			if(scenarioFound) {
 				int scenario = Integer.parseInt(result);
 				//Retrieving the resources
-				resources = Model.getModels(scenario);
+				//Can be displayed using :
+				//http://www.mpxj.org/apidocs/net/sf/mpxj/explorer/ProjectFilePanel.html
+				schedule = Model.getSchedule(scenario);
 				//Displaying resultView
 				questionView.closeQuestionView();
 				resultView.startResultView();
@@ -148,8 +153,14 @@ public class Controller {
 	//Used when clicking on download on the results view
 	//Downloads all resources in a zip archive
 	public void downloadResources() {
-		//TODO
+		ProjectFilePanel panelSchedule = new ProjectFilePanel(schedule);
+		panelSchedule.saveFile(schedule, "mpp");
 	}
+	
+	//Used from the results view to redo the questionnaire
+		public void redoQuestionnaire() {
+			editAnswer("kindOfOrganisation");
+		}
 	
 	//Used by result view when choosing to display one of the resources
 	public String displayResource(Resource r) {
@@ -170,9 +181,14 @@ public class Controller {
 		case ProcModel:
 			ret = resources[4];
 			break;
-		//One is missing ??
 		}
 		return ret;
+	}
+	
+	public void backToResults() {
+		resourcesView.closeResourcesView();
+		resultView.startResultView();
+		currentView = View.Result;
 	}
 }
 
