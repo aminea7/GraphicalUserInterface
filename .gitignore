@@ -4,3 +4,4 @@ Graphical_User_Interface/.project
 .classpath
 .project
 *.class
+.DS_Store

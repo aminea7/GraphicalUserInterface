@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.SpringLayout;
 import java.awt.Font;
 
-public class WelcomeView extends JFrame {
+public class ResourcesView extends JFrame {
 	static final long serialVersionUID = 1L;
 	
 	/* * * * * A T T R I B U T E S * * * * */
@@ -25,7 +25,7 @@ public class WelcomeView extends JFrame {
 	
 	/* * * * * C O N S T R U C T O R * * * * */
 	
-	public WelcomeView(Controller c) throws IOException {
+	public ResourcesView(Controller c) throws IOException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.cont = c;
@@ -49,19 +49,6 @@ public class WelcomeView extends JFrame {
 		jcesort.setFont(new Font("Bitstream Charter", Font.BOLD , 60));
 		jcesort.setBounds(40, 90, 300, 80);
 		welcomePanel.add(jcesort);
-		
-		/*
-		//Logo CeSort
-		//InputStream logo2 = getClass().getResourceAsStream("Images/Logo-STAR.jpg");
-		//ImageIcon logo= new ImageIcon(ImageIO.read(logo2));
-		
-		FileInputStream logo2 = new FileInputStream("Images/Logo-STAR.jpg");
-		ImageIcon logo = new ImageIcon(ImageIO.read(logo2));
-		
-		JLabel image = new JLabel(logo);
-		image.setBounds(650,90,300,80);
-		welcomePanel.add(image);
-		*/
 		
 		//Welcome small title
 		JLabel jwelcome = new JLabel("Welcome ");
@@ -135,12 +122,12 @@ public class WelcomeView extends JFrame {
 	
 	
 	
-	public void startWelcomeView() throws IOException {
+	public void startResourcesView() throws IOException {
 		setUpFrame();
 		this.setVisible(true);
 	}
 	
-	public void closeWelcomeView() throws IOException {
+	public void closeResourcesView() throws IOException {
 		// Other things to be done ?
 		this.setVisible(false);
 	}
