@@ -1,6 +1,7 @@
 package Application;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import gnu.prolog.demo.mentalarithmetic.NoAnswerException;
 import gnu.prolog.vm.PrologException;
@@ -153,6 +154,25 @@ public class Controller {
 	//Creates a specific file taht contains the data of the ExpertSystem
 	public void saveResults() {
 		//TODO
+	}
+	
+	//Used when clicking load on the welcome view, allows the user to load a previous project
+	//Return the HashMap<questionTitle, answerTitle>
+	public HashMap<String, String> loadResults(String url) {
+		//TODO : Copy the file at the given URL in knowledge.pl
+		// answers = <questionTitle, answerTitle>
+		answers = new HashMap<String, String>();
+		// keyAnswers = <keyQuestion, keyAnswer>
+		HashMap<String, String> keyAnswers = expertSystem.getKeyAnswers();
+        for (Map.Entry<String, String> mapEntry : keyAnswers.entrySet()) {
+        	String keyQuestion = mapEntry.getKey();
+        	String keyAnswer = mapEntry.getValue();
+        	Question question = questions.get(keyQuestion);
+        	String answer = question.getAnswers().get(keyAnswer);
+        	
+        	answers.put(question.getTitle(), answer);
+        }
+        return answers;
 	}
 	
 	//Used when clicking on download on the results view
