@@ -21,6 +21,7 @@ public class Controller {
 	//All the answers provided until now, the key is the key of the question that they correspond to
 	private HashMap<String, String> answers;
 	private String keyCurrentQuestion;
+	private int numCurrentQuestion = 1;
 	//Contains the representation of the resources to be displayed on resultView
 	//To be changed when the format of the resources is settled
 	private String[] resources;
@@ -37,10 +38,10 @@ public class Controller {
 	
 	public Controller() {
 		expertSystem = new ExpertSystem();
-		welcomeView = new WelcomeView();
-		questionView = new QuestionView();
-		resultView = new ResultView();
-		resourcesView = new ResourcesView();
+		welcomeView = new WelcomeView(this);
+		questionView = new QuestionView(this);
+		resultView = new ResultView(this);
+		resourcesView = new ResourcesView(this);
 		model = new Model();
 		answers = new HashMap<String,String>();
 		resources = new String[NUMBER_OF_RESOURCES];
@@ -59,6 +60,7 @@ public class Controller {
 			//Gets the first question (root of the questionnaire)
 			String result = expertSystem.reason();
 			firstQuestion = questions.get(result);
+			firstQuestion.setNum(numCurrentQuestion);
 			keyCurrentQuestion = result;
 			//Closes the welcome view and replaces it with the question view displaying the first question
 			welcomeView.closeWelcomeView();
@@ -92,6 +94,8 @@ public class Controller {
 			//Otherwise, we proceed to next question
 			} else {
 				nextQuestion = questions.get(result);
+				numCurrentQuestion++;
+				nextQuestion.setNum(numCurrentQuestion);
 				keyCurrentQuestion = result;
 			}
 		} catch (PrologException | NoAnswerException e) {
@@ -107,6 +111,7 @@ public class Controller {
 			expertSystem.setKnowledge(keyCurrentQuestion, "_");
 			String result = expertSystem.reason();
 			previousQuestion = questions.get(result);
+			numCurrentQuestion--;
 			keyCurrentQuestion = result;
 		} catch (PrologException | NoAnswerException e) {
 			e.printStackTrace();

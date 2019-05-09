@@ -10,6 +10,7 @@ public class Question {
 	/* * * * * A T T R I B U T E S * * * * */
 	
 	private String title;
+	private int num;
 	private HashMap<String, String> answers;
 	
 	/* * * * * C O N S T R U C T O R * * * * */
@@ -17,6 +18,7 @@ public class Question {
 	private Question (String pTitle, HashMap<String, String> pAnswers) {
 		this.title = pTitle;
 		this.answers = pAnswers;
+		this.num = 0;
 	}
 	
 	/* * * * * M E T H O D S * * * * */
@@ -124,5 +126,9 @@ public class Question {
 
 	public HashMap<String, String> getAnswers() {
 		return answers;
+	}
+	
+	public void setNum(int num) {
+		this.num = num;
 	}
 }
