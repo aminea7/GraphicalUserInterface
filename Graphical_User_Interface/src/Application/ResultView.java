@@ -3,15 +3,18 @@ package Application;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import Application.Resource.Controller;
-
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -41,13 +44,16 @@ public class ResultView extends JFrame {
 	private JButton btnHome;
 	private JButton btnDownload;
 	private JButton btnSave;
+	private JButton btnModels;
+	private JButton btnOrganizationnalChart;
+	private JButton btnRequirements;
 	
 	/* * * * * C O N S T R U C T O R * * * * */
 	
-	public ResultView(Controller c) throws IOException {
+	public ResultView() throws IOException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		this.controller = c;
+		//this.controller = c;
 		
 		panel = new JPanel();
 		layout = new SpringLayout();
@@ -60,7 +66,9 @@ public class ResultView extends JFrame {
 		previousQuestionsLayout = new BoxLayout(previousQuestionsPanel, BoxLayout.Y_AXIS);
 		
 		this.setSize(1000,600);
-		setUpFrame();
+		this.setResizable(false);
+
+		//setUpFrame();
 
 	}
 	private void setUpFrame() throws IOException {
@@ -71,32 +79,13 @@ public class ResultView extends JFrame {
 		previousQuestionsPanel.setLayout(previousQuestionsLayout);
 
 		panel.add(previousQuestionsScroll);
-				
-		//paintComponents(this.getGraphics());
-		
+						
 		lblYourPreviousAnswers = new JLabel("All your answers :");
 		lblYourPreviousAnswers.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		layout.putConstraint(SpringLayout.SOUTH, lblYourPreviousAnswers, -539, SpringLayout.SOUTH, panel);
 		layout.putConstraint(SpringLayout.NORTH, previousQuestionsScroll, 6, SpringLayout.SOUTH, lblYourPreviousAnswers);
 		layout.putConstraint(SpringLayout.WEST, lblYourPreviousAnswers, 0, SpringLayout.WEST, previousQuestionsScroll);
 		panel.add(lblYourPreviousAnswers);
-		
-		/*
-		//URL url = getClass().getResource("/Images/planning.png");
-		//InputStream planningInput = new FileInputStream(url.getPath());
-		
-		String path = new File(".").getCanonicalPath();
-		System.out.println(path);
-		
-		InputStream planningInput = getClass().getResourceAsStream("planning.png");
-		BufferedImage planning = ImageIO.read(planningInput);
-		JLabel logoPlanning = new JLabel(new ImageIcon(planning));
-				
-		layout.putConstraint(SpringLayout.NORTH, logoPlanning, 78, SpringLayout.NORTH, panel);
-		layout.putConstraint(SpringLayout.WEST, logoPlanning, 294, SpringLayout.WEST, panel);
-		layout.putConstraint(SpringLayout.EAST, logoPlanning, -96, SpringLayout.WEST, previousQuestionsScroll);
-        panel.add(logoPlanning);
-		*/
 		
 		lblResults = new JLabel("Results");
 		lblResults.setFont(new Font("Lucida Grande", Font.BOLD, 22));
@@ -146,11 +135,91 @@ public class ResultView extends JFrame {
 		btnSave.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		panel.add(btnSave);
 		
+		
+		FileInputStream fileP = new FileInputStream("Images/planning.png");
+		ImageIcon logoP = new ImageIcon(ImageIO.read(fileP));
+		JLabel imageP = new JLabel(logoP);
+		imageP.setBounds(200,100,50,50);
+		imageP.setOpaque(false);
+        panel.add(imageP);
+        
+		FileInputStream fileM = new FileInputStream("Images/models.png");
+		ImageIcon logoM = new ImageIcon(ImageIO.read(fileM));
+		JLabel imageM = new JLabel(logoM);
+		imageM.setBounds(200,100,50,50);
+		imageM.setOpaque(false);
+        panel.add(imageM);
+        
+		FileInputStream fileR = new FileInputStream("Images/requirements.png");
+		ImageIcon logoR = new ImageIcon(ImageIO.read(fileR));
+		JLabel imageR = new JLabel(logoR);
+		imageR.setBounds(200,100,50,50);
+		imageR.setOpaque(false);
+        panel.add(imageR);
+        
+		FileInputStream fileO = new FileInputStream("Images/orgChart.png");
+		ImageIcon logoO = new ImageIcon(ImageIO.read(fileO));
+		JLabel imageO = new JLabel(logoO);
+		imageO.setBounds(200,100,50,50);
+		imageO.setOpaque(false);
+        panel.add(imageO);
+		
 		JButton btnPlanning = new JButton("Planning");
-		layout.putConstraint(SpringLayout.NORTH, btnPlanning, 126, SpringLayout.NORTH, panel);
-		layout.putConstraint(SpringLayout.EAST, btnPlanning, -70, SpringLayout.WEST, previousQuestionsScroll);
+		layout.putConstraint(SpringLayout.NORTH, imageP, -90, SpringLayout.NORTH, btnPlanning);
+		layout.putConstraint(SpringLayout.WEST, imageP, 0, SpringLayout.WEST, btnPlanning);
+		layout.putConstraint(SpringLayout.SOUTH, imageP, -10, SpringLayout.NORTH, btnPlanning);
+		layout.putConstraint(SpringLayout.EAST, imageP, 0, SpringLayout.EAST, btnPlanning);
+		layout.putConstraint(SpringLayout.NORTH, btnPlanning, 164, SpringLayout.NORTH, panel);
+		layout.putConstraint(SpringLayout.WEST, btnPlanning, 0, SpringLayout.WEST, btnDownload);
+		btnPlanning.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TO DO.
+			}
+		});
 		panel.add(btnPlanning);
 		
+		btnModels = new JButton("Models");
+		layout.putConstraint(SpringLayout.NORTH, imageM, -90, SpringLayout.NORTH, btnModels);
+		layout.putConstraint(SpringLayout.WEST, imageM, 0, SpringLayout.WEST, btnModels);
+		layout.putConstraint(SpringLayout.SOUTH, imageM, -10, SpringLayout.NORTH, btnModels);
+		layout.putConstraint(SpringLayout.EAST, imageM, 0, SpringLayout.EAST, btnModels);
+		layout.putConstraint(SpringLayout.NORTH, btnModels, 0, SpringLayout.NORTH, btnPlanning);
+		layout.putConstraint(SpringLayout.WEST, btnModels, 74, SpringLayout.WEST, panel);
+		btnModels.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TO DO.
+			}
+		});
+		panel.add(btnModels);
+		
+		btnOrganizationnalChart = new JButton("Organizationnal chart");
+		layout.putConstraint(SpringLayout.NORTH, imageO, -90, SpringLayout.NORTH, btnOrganizationnalChart);
+		layout.putConstraint(SpringLayout.WEST, imageO, 0, SpringLayout.WEST, btnOrganizationnalChart);
+		layout.putConstraint(SpringLayout.SOUTH, imageO, -10, SpringLayout.NORTH, btnOrganizationnalChart);
+		layout.putConstraint(SpringLayout.EAST, imageO, 0, SpringLayout.EAST, btnOrganizationnalChart);
+		layout.putConstraint(SpringLayout.NORTH, btnOrganizationnalChart, 136, SpringLayout.SOUTH, btnPlanning);
+		layout.putConstraint(SpringLayout.EAST, btnOrganizationnalChart, -27, SpringLayout.WEST, previousQuestionsScroll);
+		btnOrganizationnalChart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TO DO.
+			}
+		});
+		panel.add(btnOrganizationnalChart);
+		
+		btnRequirements = new JButton("Requirements");
+		layout.putConstraint(SpringLayout.NORTH, imageR, -90, SpringLayout.NORTH, btnRequirements);
+		layout.putConstraint(SpringLayout.WEST, imageR, 0, SpringLayout.WEST, btnRequirements);
+		layout.putConstraint(SpringLayout.SOUTH, imageR, -10, SpringLayout.NORTH, btnRequirements);
+		layout.putConstraint(SpringLayout.EAST, imageR, 0, SpringLayout.EAST, btnRequirements);
+		layout.putConstraint(SpringLayout.NORTH, btnRequirements, 0, SpringLayout.NORTH, btnOrganizationnalChart);
+		layout.putConstraint(SpringLayout.WEST, btnRequirements, 56, SpringLayout.WEST, panel);
+		btnRequirements.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TO DO.
+			}
+		});
+		panel.add(btnRequirements);
+		/*
 		// Creation of a list of previous Q & A.
 		if(listQA.values() != null) {
 			for(String question : listQA.keySet()) {
@@ -162,7 +231,7 @@ public class ResultView extends JFrame {
 				previousQuestionsPanel.repaint();
 			}
 		}
-		
+		*/
 		panel.repaint();
 		panel.revalidate();
 	}
@@ -185,4 +254,12 @@ public class ResultView extends JFrame {
 		// Other things to be done ?
 		this.setVisible(false);
 	}
+	
+	public static void main(String[] args) throws IOException {
+		ResultView resultView = new ResultView();
+		resultView.setUpFrame();
+		resultView.setVisible(true);
+
+	}
+	
 }

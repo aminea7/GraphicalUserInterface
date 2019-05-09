@@ -84,7 +84,7 @@ public class QuestionView extends JFrame {
 		previousQuestionsPanel.setLayout(previousQuestionsLayout);
 		answersPanel.setLayout(answersLayout);
 
-
+		
 		panel.add(previousQuestionsScroll);
 		panel.add(answersScroll);
 		
@@ -134,10 +134,6 @@ public class QuestionView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Advance to the next question
 				controller.nextQuestion(currentAnswer);
-				// ou bien 
-				// controller.nextQuestion();
-				// ou bien 
-				// controller.nextQuestion(KEYcurrentAnswer);
 				}
 		});
 		panel.add(btnNextQuestion);
@@ -176,7 +172,6 @@ public class QuestionView extends JFrame {
 				previousQuestionsPanel.repaint();
 			}
 		}
-		
 		panel.repaint();
 		panel.revalidate();
 	}
