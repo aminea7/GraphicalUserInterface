@@ -233,23 +233,17 @@ public class Controller {
 	}
 	
 	private HashMap<String,String> getStrings(){
-		HashMap<String,String> keys = expertSystem.getKeyAnswers();
-		HashMap<String,String> strings = new HashMap<String,String>();
-		for (Map.Entry<String, String> keyEntry : keys.entrySet()) {
-	        	String keyQuestion = keyEntry.getKey();
-	        	String keyAnswer = keyEntry.getValue();
-	        	for (Map.Entry<String, Question> questionEntry : questions.entrySet()) {
-	            	if (keyEntry.getKey().equals(keyQuestion)) {
-	            		for (Map.Entry<String, String> answers : questionEntry.getValue().getAnswers().entrySet()) {
-	            			if (keyAnswer.equals(answers.getKey())) {
-	            				strings.put(questionEntry.getValue().getTitle(),answers.getValue());
-	            			}
-	            		}
-	            	}
-            }
+        HashMap<String,String> keys = expertSystem.getKeyAnswers();
+        HashMap<String,String> strings = new HashMap<String,String>();
+        for (Map.Entry<String, String> keyEntry : keys.entrySet()) {
+            String keyQuestion = keyEntry.getKey();
+            String keyAnswer = keyEntry.getValue();
+            strings.put(questions.get(keyQuestion).getTitle(),
+            questions.get(keyQuestion).getAnswers().get(keyAnswer));
         }
-		return strings;
-	}
+        return strings;
+    }
+
 	
 	private String getKeyWithString(String answer) {
 		String ret = "";
