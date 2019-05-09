@@ -2,3 +2,4 @@ Graphical_User_Interface/bin
 .classpath
 .project
 *.class
+.DS_Store
