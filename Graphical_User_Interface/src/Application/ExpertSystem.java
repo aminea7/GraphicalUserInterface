@@ -2,7 +2,9 @@ package Application;
 
 import java.util.HashMap;
 import java.util.List;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -47,7 +49,7 @@ public class ExpertSystem {
 			{"_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_"}};
 	}
 	
-	/* * * * * S E T T E R * * * * */
+	/* * * * * G E T T E R S  &  S E T T E R S * * * * */
 	
 	/**
 	 * Modify the knowledge according to the parameters
@@ -61,13 +63,23 @@ public class ExpertSystem {
     		}
     	 }
  	}
-
-    
+ 
     public void resetKnowledge() {
     	for(int i = 0; i < NBCRITERIA; i++) {
     		this.knowledge[1][i] = "_";
     	 }
     }
+    
+    public HashMap<String, String> getKeyAnswers() {
+    	HashMap<String, String> keyAnswers = new HashMap<String, String>();
+    	for(int i = 0; i < NBCRITERIA; i++) {
+    		if(!knowledge[1][i].equals("_")) {
+    			keyAnswers.put(knowledge[0][i], knowledge[1][i]);
+    		}
+    	}
+    	return keyAnswers;
+    }
+    
 	/* * * * * M E T H O D S * * * * */
 	
 	/**
@@ -90,6 +102,39 @@ public class ExpertSystem {
 		{ 
 			System.out.print("[ERROR] "); ioe.printStackTrace();
 		} 
+ 	}
+    
+    /**
+	 * Read the knowledge from knowledge.pl.
+	 */
+    public void readKnowledge() 
+	{ 
+		String file = ExpertSystem.class.getResource("knowledge.pl").getFile(); 
+		try { 
+		   	FileReader fr = new FileReader(file); 
+		  	BufferedReader input = new BufferedReader(fr);
+		  	String line;
+		  	while ((line = input.readLine()) != null) {
+		  	   String keyQuestion = line.split("\\(")[0];
+		  	   String keyAnswer = line.split("\\(")[1].split("\\)")[0];
+		  	   setKnowledge(keyQuestion, keyAnswer);
+		  	}
+		  	input.close(); 
+	  	} catch(IOException ioe)
+		{ 
+			System.out.print("[ERROR] "); ioe.printStackTrace();
+		} 
+ 	}
+    
+    /**
+	 * Print the content of knowledge[][]
+	 */
+    public void printKnowledge() 
+	{ 
+    	System.out.println("[DEBUG] Content of knowledge[][] : ");
+    	for(int i = 0; i < NBCRITERIA; i++) {
+			System.out.println(knowledge[0][i] + "(" + knowledge[1][i] + ").");
+		}
  	}
 
 	/**
@@ -179,39 +224,8 @@ public class ExpertSystem {
 	{
 		ExpertSystem expertSystem = new ExpertSystem();
 		HashMap<String, Question> questions = Question.getQuestions();
-		try
-		{	
-			// Exemple de raisonnement de ExpertSystem
-			// // Au début, il faut poser la q° sur kindOfOrganisation
-			String reasoning = expertSystem.reason();
-			// If reasoning matches the regex [0-9]
-			boolean scenarioFound = reasoning.matches("\\d+");
-			if(scenarioFound) {
-				// resultView
-				int scenario = Integer.parseInt(reasoning);
-				System.out.println("[DEBUG] We find the perfect scenario  : " + scenario);
-			} else {
-				// questionView
-				Question currentQuestion = questions.get(reasoning);
-				System.out.println("[DEBUG] We need to ask an other question : " + currentQuestion.getTitle());
-			}
-			
-			// Exemple de traitement d'une réponse de l'utilisateur
-			// // Si l'utilisateur répond oem à la 1ère question
-			// // La vue renvoie la clé de la réponse choisie
-			String keyUserAnswer = "oem";
-			expertSystem.setKnowledge("kindOfOrganisation", keyUserAnswer);
-			// // Pour vérifier que ça s'est bien mis à jour : 
-			expertSystem.writeKnowledge();
-			
-		} // Something went wrong: tell the user.
-		catch (PrologException e)
-		{
-			System.err.println(e.toString());
-		}
-		catch (NoAnswerException e)
-		{
-			System.err.println(e.toString());
-		}
+		expertSystem.printKnowledge();
+		expertSystem.readKnowledge();
+		expertSystem.printKnowledge();
 	}
 }

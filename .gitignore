@@ -1,3 +1,4 @@
-Graphical_User_Interface/bin/
+Graphical_User_Interface/bin
 .classpath
 .project
+*.class

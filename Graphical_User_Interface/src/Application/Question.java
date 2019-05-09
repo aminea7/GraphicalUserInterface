@@ -109,6 +109,8 @@ public class Question {
 		
 	}
 	
+	/* * * * * G E T T E R S  &  S E T T E R S * * * * */
+	
 	public static HashMap<String, Question> getQuestions() {
 		if (firstTime) 
 		{
