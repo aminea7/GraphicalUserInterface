@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import Application.Resource.Controller;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -87,7 +86,7 @@ public class QuestionView extends JFrame {
 		panel.add(previousQuestionsScroll);
 		panel.add(answersScroll);
 		
-		questionLabel = new JLabel("Question number ?");
+		questionLabel = new JLabel("Question number "+ currentQuestion.getNum());
 		layout.putConstraint(SpringLayout.NORTH, questionLabel, 34, SpringLayout.NORTH, panel);
 		layout.putConstraint(SpringLayout.WEST, questionLabel, 40, SpringLayout.WEST, panel);
 		questionLabel.setFont(new Font("Lucida Grande", Font.BOLD, 17));
@@ -112,7 +111,7 @@ public class QuestionView extends JFrame {
 		layout.putConstraint(SpringLayout.NORTH, btnPreviousQuestion, 55, SpringLayout.SOUTH, answersScroll);
 		layout.putConstraint(SpringLayout.WEST, btnPreviousQuestion, 40, SpringLayout.WEST, panel);
 		layout.putConstraint(SpringLayout.SOUTH, btnPreviousQuestion, -53, SpringLayout.SOUTH, panel);
-		btnPreviousQuestion.setForeground(new Color(105, 105, 105));
+		btnPreviousQuestion.setForeground(new Color(0, 0, 0));
 		btnPreviousQuestion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Go to previous question
@@ -120,6 +119,9 @@ public class QuestionView extends JFrame {
 			}
 		});
 		panel.add(btnPreviousQuestion);
+		if(currentQuestion.getNum() == 1) {
+			btnPreviousQuestion.setVisible(false);
+		}
 		
 		btnNextQuestion = new JButton("Next question");
 		layout.putConstraint(SpringLayout.EAST, btnPreviousQuestion, -55, SpringLayout.WEST, btnNextQuestion);
@@ -142,6 +144,12 @@ public class QuestionView extends JFrame {
 		layout.putConstraint(SpringLayout.WEST, btnHome, -166, SpringLayout.EAST, panel);
 		layout.putConstraint(SpringLayout.SOUTH, btnHome, -21, SpringLayout.SOUTH, panel);
 		layout.putConstraint(SpringLayout.EAST, btnHome, -61, SpringLayout.EAST, panel);
+		btnHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Advance to the next question
+				controller.displayHome();
+				}
+		});
 		panel.add(btnHome);
 		
 		// Creation of a list of answers.
@@ -161,16 +169,17 @@ public class QuestionView extends JFrame {
 		}
 		
 		// Creation of a list of previous Q & A.
-		if(listQA.values() != null) {
+		if(listQA != null) {
 			for(String question : listQA.keySet()) {
 				JLabel newQuestion = new JLabel(question);
-				JLabel newAnswer = new JLabel(">>> " + listQA.get(question) + "<html><br><html>");
+				JLabel newAnswer = new JLabel(">>> " + listQA.get(question) + "\n");
 				previousQuestionsPanel.add(newQuestion);
 				previousQuestionsPanel.add(newAnswer);
 				previousQuestionsPanel.revalidate();
 				previousQuestionsPanel.repaint();
 			}
 		}
+		
 		panel.repaint();
 		panel.revalidate();
 	}

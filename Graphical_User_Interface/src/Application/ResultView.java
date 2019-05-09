@@ -2,7 +2,6 @@ package Application;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import Application.Resource.Controller;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -99,7 +98,7 @@ public class ResultView extends JFrame {
 		btnHome.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Nothing yet.
+				controller.displayHome();
 			}
 		});
 		panel.add(btnHome);
@@ -252,7 +251,7 @@ public class ResultView extends JFrame {
 		if(listQA.values() != null) {
 			for(String question : listQA.keySet()) {
 				JLabel newQuestion = new JLabel(question);
-				JLabel newAnswer = new JLabel(">>> " + listQA.get(question) + "<html><br><html>");
+				JLabel newAnswer = new JLabel(">>> " + listQA.get(question) + "\n");
 				previousQuestionsPanel.add(newQuestion);
 				previousQuestionsPanel.add(newAnswer);
 				previousQuestionsPanel.revalidate();

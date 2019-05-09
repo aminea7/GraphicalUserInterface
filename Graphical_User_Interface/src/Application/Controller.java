@@ -6,22 +6,20 @@ import java.util.Map;
 import gnu.prolog.demo.mentalarithmetic.NoAnswerException;
 import gnu.prolog.vm.PrologException;
 import net.sf.mpxj.ProjectFile;
-import net.sf.mpxj.explorer.ProjectFilePanel;
 
-enum Language {FR,EN};
-enum View {Welcome, Question, Result, Resources};
-enum Resource {Schedule, Chart, ReqList, ReqModel, ProcModel};
 
 public class Controller {
-	
-	/* * * * * A T T R I B U T E S * * * * */
-	
 	int NUMBER_OF_RESOURCES = 5;
-	
+	enum Language{FR,EN};
+	enum View{Welcome, Question, Result, Resources};
+	enum Resource{Schedule, Chart, ReqList, ReqModel, ProcModel};
+
+	/* * * * * A T T R I B U T E S * * * * */
+		
 	//The list of all available questions
 	private HashMap<String, Question> questions;
 	//All the answers provided until now, the key is the key of the question that they correspond to
-	private HashMap<String, String> answers;
+	//private HashMap<String, String> answers;
 	private String keyCurrentQuestion;
 	private int numCurrentQuestion = 1;
 	//Contains the representation of the resources to be displayed on resultView
@@ -41,11 +39,9 @@ public class Controller {
 	public Controller() {
 		expertSystem = new ExpertSystem();
 		welcomeView = new WelcomeView(this);
-		questionView = new QuestionView(this);
-		resultView = new ResultView(this);
 		resourcesView = new ResourcesView(this);
 		model = new Model();
-		answers = new HashMap<String,String>();
+		//answers = new HashMap<String,String>();
 		resources = new String[NUMBER_OF_RESOURCES];
 		questions = Question.getQuestions();
 		keyCurrentQuestion = null;
@@ -61,12 +57,14 @@ public class Controller {
 		try {
 			//Gets the first question (root of the questionnaire)
 			String result = expertSystem.reason();
+			questionView = new QuestionView(this);
+			numCurrentQuestion = 1;
 			firstQuestion = questions.get(result);
 			firstQuestion.setNum(numCurrentQuestion);
 			keyCurrentQuestion = result;
 			//Closes the welcome view and replaces it with the question view displaying the first question
 			welcomeView.closeWelcomeView();
-			questionView.startQuestionView(firstQuestion);
+			questionView.startQuestionView(firstQuestion, null);
 			currentView = View.Question;
 		} catch (PrologException | NoAnswerException e) {
 			e.printStackTrace();
@@ -74,51 +72,64 @@ public class Controller {
 	}
 	
 	//Used by the questionnaire to get the next question and refresh the view to display it
-	public Question nextQuestion(String keyAnswer) {
+	public void nextQuestion(String stringAnswer) {
 		Question nextQuestion = null;
-		//Saves the answer to the previous question
-		answers.put(keyCurrentQuestion, keyAnswer);
 		try {
+			String keyAnswer = getKeyWithString(stringAnswer);
 			expertSystem.setKnowledge(keyCurrentQuestion, keyAnswer);
 			String result = expertSystem.reason();
+			System.out.println(result);
 			boolean scenarioFound = result.matches("\\d+");
 			//When the questionnaire is finished
 			if(scenarioFound) {
 				int scenario = Integer.parseInt(result);
+				System.out.println("[DEBUG] scenario = " + scenario);
 				//Retrieving the resources
 				//Can be displayed using :
 				//http://www.mpxj.org/apidocs/net/sf/mpxj/explorer/ProjectFilePanel.html
 				schedule = Model.getSchedule(scenario);
 				//Displaying resultView
 				questionView.closeQuestionView();
-				resultView.startResultView();
+				resultView = new ResultView(this);
+				resultView.startResultView(getStrings());
 				currentView = View.Result;
 			//Otherwise, we proceed to next question
 			} else {
+				questionView.closeQuestionView();
 				nextQuestion = questions.get(result);
 				numCurrentQuestion++;
 				nextQuestion.setNum(numCurrentQuestion);
 				keyCurrentQuestion = result;
+				questionView = new QuestionView(this);
+				questionView.startQuestionView(nextQuestion, getStrings());
 			}
 		} catch (PrologException | NoAnswerException e) {
 			e.printStackTrace();
 		}
-		return nextQuestion;
 	}
 	
 	//Used by the questionnaire to get the previous question and refresh the view to display it
-	public Question previousQuestion() {
+	public void previousQuestion() {
 		Question previousQuestion = null;
 		try {
-			expertSystem.setKnowledge(keyCurrentQuestion, "_");
-			String result = expertSystem.reason();
-			previousQuestion = questions.get(result);
+			questionView.closeQuestionView();
+			questions.get(keyCurrentQuestion).setNum(0);
 			numCurrentQuestion--;
+			
+			String keyPreviousQuestion = Question.getQuestionByNum(numCurrentQuestion);	
+			expertSystem.setKnowledge(keyPreviousQuestion, "_");	
+			String result = expertSystem.reason();
+			
 			keyCurrentQuestion = result;
+			
+			questionView = new QuestionView(this);
+			previousQuestion = questions.get(result);
+			
+			questionView.startQuestionView(previousQuestion, getStrings());
+			
 		} catch (PrologException | NoAnswerException e) {
 			e.printStackTrace();
 		}
-		return previousQuestion;
 	}
 	
 	public void displayHome() {
@@ -132,6 +143,8 @@ public class Controller {
 			break;
 		case Resources:
 			resourcesView.closeResourcesView();
+			break;
+		default:
 			break;
 		}
 		//Opens welcome view and resets questionnaire
@@ -152,7 +165,7 @@ public class Controller {
 	
 	//Used when clicking save on the results view, allows the user to specify
 	//a place where the project has to be saved.
-	//Creates a specific file taht contains the data of the ExpertSystem
+	//Creates a specific file that contains the data of the ExpertSystem
 	public void saveResults() {
 		//TODO
 	}
@@ -162,16 +175,16 @@ public class Controller {
 	public HashMap<String, String> loadResults(String url) {
 		//TODO : Copy the file at the given URL in knowledge.pl
 		// answers = <questionTitle, answerTitle>
-		answers = new HashMap<String, String>();
+		HashMap<String,String> answers = new HashMap<String, String>();
 		// keyAnswers = <keyQuestion, keyAnswer>
 		HashMap<String, String> keyAnswers = expertSystem.getKeyAnswers();
         for (Map.Entry<String, String> mapEntry : keyAnswers.entrySet()) {
-        	String keyQuestion = mapEntry.getKey();
-        	String keyAnswer = mapEntry.getValue();
-        	Question question = questions.get(keyQuestion);
-        	String answer = question.getAnswers().get(keyAnswer);
-        	
-        	answers.put(question.getTitle(), answer);
+	        	String keyQuestion = mapEntry.getKey();
+	        	String keyAnswer = mapEntry.getValue();
+	        	Question question = questions.get(keyQuestion);
+	        	String answer = question.getAnswers().get(keyAnswer);
+	        	
+	        	answers.put(question.getTitle(), answer);
         }
         return answers;
 	}
@@ -179,14 +192,16 @@ public class Controller {
 	//Used when clicking on download on the results view
 	//Downloads all resources in a zip archive
 	public void downloadResources() {
+		/*
 		ProjectFilePanel panelSchedule = new ProjectFilePanel(schedule);
 		panelSchedule.saveFile(schedule, "mpp");
+		*/
 	}
 	
 	//Used from the results view to redo the questionnaire
-		public void redoQuestionnaire() {
-			editAnswer("kindOfOrganisation");
-		}
+	public void redoQuestionnaire() {
+		editAnswer("kindOfOrganisation");
+	}
 	
 	//Used by result view when choosing to display one of the resources
 	public String displayResource(Resource r) {
@@ -213,9 +228,40 @@ public class Controller {
 	
 	public void backToResults() {
 		resourcesView.closeResourcesView();
-		resultView.startResultView();
+		resultView.startResultView(getStrings());
 		currentView = View.Result;
 	}
+	
+	private HashMap<String,String> getStrings(){
+		HashMap<String,String> keys = expertSystem.getKeyAnswers();
+		HashMap<String,String> strings = new HashMap<String,String>();
+		for (Map.Entry<String, String> keyEntry : keys.entrySet()) {
+	        	String keyQuestion = keyEntry.getKey();
+	        	String keyAnswer = keyEntry.getValue();
+	        	for (Map.Entry<String, Question> questionEntry : questions.entrySet()) {
+	            	if (keyEntry.getKey().equals(keyQuestion)) {
+	            		for (Map.Entry<String, String> answers : questionEntry.getValue().getAnswers().entrySet()) {
+	            			if (keyAnswer.equals(answers.getKey())) {
+	            				strings.put(questionEntry.getValue().getTitle(),answers.getValue());
+	            			}
+	            		}
+	            	}
+            }
+        }
+		return strings;
+	}
+	
+	private String getKeyWithString(String answer) {
+		String ret = "";
+		Question current = questions.get(keyCurrentQuestion);
+		for (Map.Entry<String, String> answerEntry : current.getAnswers().entrySet()) {
+	        	if (answerEntry.getValue().equals(answer)) {
+	        		ret = answerEntry.getKey();
+	        	}
+		}
+		return ret;
+	}
+	
 }
 
 
