@@ -8,19 +8,17 @@ import gnu.prolog.vm.PrologException;
 import net.sf.mpxj.ProjectFile;
 import net.sf.mpxj.explorer.ProjectFilePanel;
 
-enum Language {FR,EN};
-enum View {Welcome, Question, Result, Resources};
-enum Resource {Schedule, Chart, ReqList, ReqModel, ProcModel};
-int NUMBER_OF_RESOURCES = 5;
-
 public class Controller {
-	
+	int NUMBER_OF_RESOURCES = 5;
+	enum Language{FR,EN};
+	enum View{Welcome, Question, Result, Resources};
+	enum Resource{Schedule, Chart, ReqList, ReqModel, ProcModel};
 	/* * * * * A T T R I B U T E S * * * * */
 	
 	//The list of all available questions
 	private HashMap<String, Question> questions;
 	//All the answers provided until now, the key is the key of the question that they correspond to
-	private HashMap<String, String> answers;
+	//private HashMap<String, String> answers;
 	private String keyCurrentQuestion;
 	private int numCurrentQuestion = 1;
 	//Contains the representation of the resources to be displayed on resultView
@@ -44,7 +42,7 @@ public class Controller {
 		resultView = new ResultView(this);
 		resourcesView = new ResourcesView(this);
 		model = new Model();
-		answers = new HashMap<String,String>();
+		//answers = new HashMap<String,String>();
 		resources = new String[NUMBER_OF_RESOURCES];
 		questions = Question.getQuestions();
 		keyCurrentQuestion = null;
@@ -65,7 +63,7 @@ public class Controller {
 			keyCurrentQuestion = result;
 			//Closes the welcome view and replaces it with the question view displaying the first question
 			welcomeView.closeWelcomeView();
-			questionView.startQuestionView(firstQuestion);
+			questionView.startQuestionView(firstQuestion, null);
 			currentView = View.Question;
 		} catch (PrologException | NoAnswerException e) {
 			e.printStackTrace();
@@ -73,10 +71,8 @@ public class Controller {
 	}
 	
 	//Used by the questionnaire to get the next question and refresh the view to display it
-	public Question nextQuestion(String keyAnswer) {
+	public void nextQuestion(String keyAnswer) {
 		Question nextQuestion = null;
-		//Saves the answer to the previous question
-		answers.put(keyCurrentQuestion, keyAnswer);
 		try {
 			expertSystem.setKnowledge(keyCurrentQuestion, keyAnswer);
 			String result = expertSystem.reason();
@@ -90,7 +86,7 @@ public class Controller {
 				schedule = Model.getSchedule(scenario);
 				//Displaying resultView
 				questionView.closeQuestionView();
-				resultView.startResultView();
+				resultView.startResultView(getStrings());
 				currentView = View.Result;
 			//Otherwise, we proceed to next question
 			} else {
@@ -98,11 +94,11 @@ public class Controller {
 				numCurrentQuestion++;
 				nextQuestion.setNum(numCurrentQuestion);
 				keyCurrentQuestion = result;
+				questionView.startQuestionView(nextQuestion, );
 			}
 		} catch (PrologException | NoAnswerException e) {
 			e.printStackTrace();
 		}
-		return nextQuestion;
 	}
 	
 	//Used by the questionnaire to get the previous question and refresh the view to display it
@@ -151,7 +147,7 @@ public class Controller {
 	
 	//Used when clicking save on the results view, allows the user to specify
 	//a place where the project has to be saved.
-	//Creates a specific file taht contains the data of the ExpertSystem
+	//Creates a specific file that contains the data of the ExpertSystem
 	public void saveResults() {
 		//TODO
 	}
@@ -161,7 +157,7 @@ public class Controller {
 	public HashMap<String, String> loadResults(String url) {
 		//TODO : Copy the file at the given URL in knowledge.pl
 		// answers = <questionTitle, answerTitle>
-		answers = new HashMap<String, String>();
+		HashMap<String,String> answers = new HashMap<String, String>();
 		// keyAnswers = <keyQuestion, keyAnswer>
 		HashMap<String, String> keyAnswers = expertSystem.getKeyAnswers();
         for (Map.Entry<String, String> mapEntry : keyAnswers.entrySet()) {
@@ -178,14 +174,16 @@ public class Controller {
 	//Used when clicking on download on the results view
 	//Downloads all resources in a zip archive
 	public void downloadResources() {
+		/*
 		ProjectFilePanel panelSchedule = new ProjectFilePanel(schedule);
 		panelSchedule.saveFile(schedule, "mpp");
+		*/
 	}
 	
 	//Used from the results view to redo the questionnaire
-		public void redoQuestionnaire() {
-			editAnswer("kindOfOrganisation");
-		}
+	public void redoQuestionnaire() {
+		editAnswer("kindOfOrganisation");
+	}
 	
 	//Used by result view when choosing to display one of the resources
 	public String displayResource(Resource r) {
@@ -214,6 +212,25 @@ public class Controller {
 		resourcesView.closeResourcesView();
 		resultView.startResultView();
 		currentView = View.Result;
+	}
+	
+	private HashMap<String,String> getStrings(){
+		HashMap<String,String> keys = expertSystem.getKeyAnswers();
+		HashMap<String,String> strings = new HashMap<String,String>();
+		for (Map.Entry<String, String> keyEntry : keys.entrySet()) {
+        	String keyQuestion = keyEntry.getKey();
+        	String keyAnswer = keyEntry.getValue();
+        	for (Map.Entry<String, Question> questionEntry : questions.entrySet()) {
+            	if (keyEntry.getKey().equals(keyQuestion)) {
+            		for (Map.Entry<String, String> answers : questionEntry.getValue().getAnswers().entrySet()) {
+            			if (keyEntry.getValue().equals(answers.getKey())) {
+            				strings.put(questionEntry.getValue().getTitle(),answers.getValue());
+            			}
+            		}
+            	}
+            }
+        }
+		return strings;
 	}
 }
 
