@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import Application.Resource.Controller;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
@@ -50,10 +49,10 @@ public class ResultView extends JFrame {
 	
 	/* * * * * C O N S T R U C T O R * * * * */
 	
-	public ResultView() throws IOException {
+	public ResultView(Controller c) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		//this.controller = c;
+		this.controller = c;
 		
 		panel = new JPanel();
 		layout = new SpringLayout();
@@ -71,7 +70,7 @@ public class ResultView extends JFrame {
 		//setUpFrame();
 
 	}
-	private void setUpFrame() throws IOException {
+	private void setUpFrame() {
 		/* General things to do. */
 		setContentPane(panel);
 		// Set the pan with its layout
@@ -136,33 +135,62 @@ public class ResultView extends JFrame {
 		panel.add(btnSave);
 		
 		
-		FileInputStream fileP = new FileInputStream("Images/planning.png");
-		ImageIcon logoP = new ImageIcon(ImageIO.read(fileP));
-		JLabel imageP = new JLabel(logoP);
-		imageP.setBounds(200,100,50,50);
-		imageP.setOpaque(false);
-        panel.add(imageP);
+		FileInputStream fileP;
+		JLabel imageP = null;
+		try {
+			fileP = new FileInputStream("Images/planning.png");
+			ImageIcon logoP = new ImageIcon(ImageIO.read(fileP));
+			imageP = new JLabel(logoP);
+			imageP.setBounds(200,100,50,50);
+			imageP.setOpaque(false);
+	        panel.add(imageP);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         
-		FileInputStream fileM = new FileInputStream("Images/models.png");
-		ImageIcon logoM = new ImageIcon(ImageIO.read(fileM));
-		JLabel imageM = new JLabel(logoM);
-		imageM.setBounds(200,100,50,50);
-		imageM.setOpaque(false);
-        panel.add(imageM);
-        
-		FileInputStream fileR = new FileInputStream("Images/requirements.png");
-		ImageIcon logoR = new ImageIcon(ImageIO.read(fileR));
-		JLabel imageR = new JLabel(logoR);
-		imageR.setBounds(200,100,50,50);
-		imageR.setOpaque(false);
-        panel.add(imageR);
-        
-		FileInputStream fileO = new FileInputStream("Images/orgChart.png");
-		ImageIcon logoO = new ImageIcon(ImageIO.read(fileO));
-		JLabel imageO = new JLabel(logoO);
-		imageO.setBounds(200,100,50,50);
-		imageO.setOpaque(false);
-        panel.add(imageO);
+		FileInputStream fileM;
+		JLabel imageM = null;
+		try {
+			fileM = new FileInputStream("Images/models.png");
+			ImageIcon logoM = new ImageIcon(ImageIO.read(fileM));
+			imageM = new JLabel(logoM);
+			imageM.setBounds(200,100,50,50);
+			imageM.setOpaque(false);
+	        panel.add(imageM);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		FileInputStream fileR;
+		JLabel imageR = null;
+		try {
+			fileR = new FileInputStream("Images/requirements.png");
+			ImageIcon logoR = new ImageIcon(ImageIO.read(fileR));
+			imageR = new JLabel(logoR);
+			imageR.setBounds(200,100,50,50);
+			imageR.setOpaque(false);
+	        panel.add(imageR);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		FileInputStream fileO;
+		JLabel imageO = null;
+		try {
+			fileO = new FileInputStream("Images/orgChart.png");
+			ImageIcon logoO = new ImageIcon(ImageIO.read(fileO));
+			imageO = new JLabel(logoO);
+			imageO.setBounds(200,100,50,50);
+			imageO.setOpaque(false);
+	        panel.add(imageO);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		
 		JButton btnPlanning = new JButton("Planning");
 		layout.putConstraint(SpringLayout.NORTH, imageP, -90, SpringLayout.NORTH, btnPlanning);
@@ -219,7 +247,7 @@ public class ResultView extends JFrame {
 			}
 		});
 		panel.add(btnRequirements);
-		/*
+		
 		// Creation of a list of previous Q & A.
 		if(listQA.values() != null) {
 			for(String question : listQA.keySet()) {
@@ -231,7 +259,7 @@ public class ResultView extends JFrame {
 				previousQuestionsPanel.repaint();
 			}
 		}
-		*/
+		
 		panel.repaint();
 		panel.revalidate();
 	}
@@ -244,22 +272,22 @@ public class ResultView extends JFrame {
         g2.draw(lin);
     }
 	
-	public void startResultView(HashMap<String, String> listQA) throws IOException {
+	public void startResultView(HashMap<String, String> listQA) {
 		this.listQA = listQA;
 		setUpFrame();
 		this.setVisible(true);
 	}
 	
-	public void closeResultView() throws IOException {
+	public void closeResultView() {
 		// Other things to be done ?
 		this.setVisible(false);
 	}
-	
-	public static void main(String[] args) throws IOException {
+	/*
+	public static void main(String[] args) {
 		ResultView resultView = new ResultView();
 		resultView.setUpFrame();
 		resultView.setVisible(true);
 
 	}
-	
+	*/
 }

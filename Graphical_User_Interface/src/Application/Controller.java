@@ -11,11 +11,12 @@ import net.sf.mpxj.explorer.ProjectFilePanel;
 enum Language {FR,EN};
 enum View {Welcome, Question, Result, Resources};
 enum Resource {Schedule, Chart, ReqList, ReqModel, ProcModel};
-int NUMBER_OF_RESOURCES = 5;
 
 public class Controller {
 	
 	/* * * * * A T T R I B U T E S * * * * */
+	
+	int NUMBER_OF_RESOURCES = 5;
 	
 	//The list of all available questions
 	private HashMap<String, Question> questions;

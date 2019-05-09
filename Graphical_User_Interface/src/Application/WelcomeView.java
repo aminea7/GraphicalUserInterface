@@ -7,7 +7,6 @@ import Application.Resource.Controller;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SpringLayout;
@@ -25,7 +24,7 @@ public class WelcomeView extends JFrame {
 	
 	/* * * * * C O N S T R U C T O R * * * * */
 	
-	public WelcomeView(Controller c) throws IOException {
+	public WelcomeView(Controller c) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.cont = c;
@@ -34,10 +33,10 @@ public class WelcomeView extends JFrame {
 		layout = new SpringLayout();
 		
 		this.setSize(600,600);
-		setUpFrame();
+		//setUpFrame();
 
 	}
-	private void setUpFrame() throws IOException {
+	private void setUpFrame() {
 		/* General things to do. */
 		setContentPane(welcomePanel);
 		// Set the pan with its layout
@@ -135,12 +134,12 @@ public class WelcomeView extends JFrame {
 	
 	
 	
-	public void startWelcomeView() throws IOException {
+	public void startWelcomeView() {
 		setUpFrame();
 		this.setVisible(true);
 	}
 	
-	public void closeWelcomeView() throws IOException {
+	public void closeWelcomeView() {
 		// Other things to be done ?
 		this.setVisible(false);
 	}

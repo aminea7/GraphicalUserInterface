@@ -9,7 +9,6 @@ import Application.Resource.Controller;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
@@ -50,7 +49,7 @@ public class QuestionView extends JFrame {
 	
 	/* * * * * C O N S T R U C T O R * * * * */
 	
-	public QuestionView(Controller c) throws IOException {
+	public QuestionView(Controller c) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.controller = c;
@@ -73,10 +72,10 @@ public class QuestionView extends JFrame {
 		answersLayout = new BoxLayout(answersPanel, BoxLayout.Y_AXIS);
 		
 		this.setSize(1000,600);
-		setUpFrame();
+		//setUpFrame();
 
 	}
-	private void setUpFrame() throws IOException {
+	private void setUpFrame() {
 		/* General things to do. */
 		setContentPane(panel);
 		// Set the pan with its layout
@@ -179,14 +178,14 @@ public class QuestionView extends JFrame {
 	
 	
 	
-	public void startQuestionView(Question cQ, HashMap<String, String> QA) throws IOException {
+	public void startQuestionView(Question cQ, HashMap<String, String> QA) {
 		this.currentQuestion = cQ;
 		this.listQA = QA;
 		setUpFrame();
 		this.setVisible(true);
 	}
 	
-	public void closeQuestionView() throws IOException {
+	public void closeQuestionView() {
 		// Other things to be done ?
 		this.setVisible(false);
 	}
