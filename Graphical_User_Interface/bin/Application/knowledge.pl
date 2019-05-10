@@ -1,0 +1,12 @@
+kindOfOrganisation(_).
+kindOfProduct(_).
+headOfficeInEU(_).
+weight(_).
+standardPart(_).
+mainResponsabilities(_).
+typeCertificate(_).
+requestModification(_).
+nextTarget(_).
+modificationRequestOrNexProgram(_).
+privilegeFromEASA(_).
+operationalConditionsMightBeRestricted(_).

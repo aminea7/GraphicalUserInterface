@@ -1,7 +1,5 @@
-Graphical_User_Interface/bin
 Graphical_User_Interface/.classpath
 Graphical_User_Interface/.project
 .classpath
 .project
-*.class
 .DS_Store
