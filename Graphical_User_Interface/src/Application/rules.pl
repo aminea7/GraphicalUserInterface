@@ -144,7 +144,7 @@ scenario(0) :-
 
 scenario(5) :-
     kindOfOrganisation(tier),
-    kindOfProduct(part),
+    kindOfProduct(appliance),
     headOfficeInEU(yes),
     weight(moreThan2T),
     standardPart(no),

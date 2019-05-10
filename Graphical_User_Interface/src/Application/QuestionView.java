@@ -8,6 +8,7 @@ import javax.swing.JRadioButton;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
@@ -40,6 +41,8 @@ public class QuestionView extends JFrame {
 	
 	private String currentAnswer;
 	
+	private ArrayList<JRadioButton> listBtnAnswer;
+	
 	private JLabel questionLabel;
 	private JLabel lblQuestionItself;
 	private JLabel lblYourPreviousAnswers;
@@ -56,6 +59,8 @@ public class QuestionView extends JFrame {
 		
 		panel = new JPanel();
 		layout = new SpringLayout();
+		
+		listBtnAnswer = new ArrayList<JRadioButton>();
 		
 		previousQuestionsPanel = new JPanel();
 		previousQuestionsPanel.setBackground(new Color(102, 153, 204));
@@ -78,7 +83,7 @@ public class QuestionView extends JFrame {
 		answersLayout = new BoxLayout(answersPanel, BoxLayout.Y_AXIS);
 		
 		this.setSize(1000,600);
-		setUpFrame();
+		//setUpFrame();
 
 	}
 	private void setUpFrame() {
@@ -163,11 +168,20 @@ public class QuestionView extends JFrame {
 		if(currentQuestion.getAnswers() != null) {
 			for(String answer : currentQuestion.getAnswers().values()) {
 				JRadioButton newAnswer = new JRadioButton(answer);
+				listBtnAnswer.add(newAnswer);
 				newAnswer.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Advance to the next question
-						currentAnswer = e.getActionCommand();
+						// Check out of the other answers
+						for(JRadioButton rb : listBtnAnswer) {
+							if(rb.equals(e.getSource())) {
+								// Advance to the next question
+								currentAnswer = e.getActionCommand();
+							}
+							else {
+								rb.setSelected(false);
+							}
 						}
+					}
 				});
 				answersPanel.add(newAnswer);
 				answersPanel.revalidate();
