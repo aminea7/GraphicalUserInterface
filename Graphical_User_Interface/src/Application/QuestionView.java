@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
 import java.awt.Font;
 
@@ -57,21 +58,27 @@ public class QuestionView extends JFrame {
 		layout = new SpringLayout();
 		
 		previousQuestionsPanel = new JPanel();
+		previousQuestionsPanel.setBackground(new Color(102, 153, 204));
 		previousQuestionsScroll = new JScrollPane(previousQuestionsPanel);
 		layout.putConstraint(SpringLayout.WEST, previousQuestionsScroll, 479, SpringLayout.WEST, panel);
 		layout.putConstraint(SpringLayout.SOUTH, previousQuestionsScroll, -79, SpringLayout.SOUTH, panel);
 		layout.putConstraint(SpringLayout.EAST, previousQuestionsScroll, -10, SpringLayout.EAST, panel);
+		previousQuestionsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		previousQuestionsScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		previousQuestionsLayout = new BoxLayout(previousQuestionsPanel, BoxLayout.Y_AXIS);
 		
 		answersPanel = new JPanel();
+		answersPanel.setBackground(new Color(192, 192, 192));
 		answersScroll = new JScrollPane(answersPanel);
 		layout.putConstraint(SpringLayout.WEST, answersScroll, 40, SpringLayout.WEST, panel);
 		layout.putConstraint(SpringLayout.SOUTH, answersScroll, -148, SpringLayout.SOUTH, panel);
 		layout.putConstraint(SpringLayout.EAST, answersScroll, -40, SpringLayout.WEST, previousQuestionsScroll);
+		answersScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		answersScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		answersLayout = new BoxLayout(answersPanel, BoxLayout.Y_AXIS);
 		
 		this.setSize(1000,600);
-		//setUpFrame();
+		setUpFrame();
 
 	}
 	private void setUpFrame() {
@@ -92,7 +99,7 @@ public class QuestionView extends JFrame {
 		questionLabel.setFont(new Font("Lucida Grande", Font.BOLD, 17));
 		panel.add(questionLabel);
 		
-		lblQuestionItself = new JLabel(currentQuestion.getTitle());
+		lblQuestionItself = new JLabel("<html>"+currentQuestion.getTitle()+"<html>");
 		layout.putConstraint(SpringLayout.NORTH, lblQuestionItself, 23, SpringLayout.SOUTH, questionLabel);
 		layout.putConstraint(SpringLayout.SOUTH, lblQuestionItself, -379, SpringLayout.SOUTH, panel);
 		layout.putConstraint(SpringLayout.NORTH, answersScroll, 25, SpringLayout.SOUTH, lblQuestionItself);
@@ -171,8 +178,8 @@ public class QuestionView extends JFrame {
 		// Creation of a list of previous Q & A.
 		if(listQA != null) {
 			for(String question : listQA.keySet()) {
-				JLabel newQuestion = new JLabel(question);
-				JLabel newAnswer = new JLabel(">>> " + listQA.get(question) + "\n");
+				JLabel newQuestion = new JLabel("<html>"+question+"<html>");
+				JLabel newAnswer = new JLabel("<html> >>> " + listQA.get(question) + "<html> \n");
 				previousQuestionsPanel.add(newQuestion);
 				previousQuestionsPanel.add(newAnswer);
 				previousQuestionsPanel.revalidate();

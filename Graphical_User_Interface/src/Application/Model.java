@@ -28,7 +28,7 @@ public class Model {
 	public static ImageIcon getReqListTemporary(int scenario) {
 		ImageIcon reqList = null;
 		try {
-			reqList = new ImageIcon(ImageIO.read(new FileInputStream("Resources/" + scenario + "/reqList.png")));
+			reqList = new ImageIcon(ImageIO.read(new FileInputStream("../Resources/" + scenario + "/reqList.png")));
 		} catch (FileNotFoundException e) {
 			System.out.println("[ERROR] "); e.printStackTrace();
 		} catch (IOException e) {
@@ -43,7 +43,7 @@ public class Model {
 	public static ImageIcon getReqModelTemporary(int scenario) {
 		ImageIcon reqModel = null;
 		try {
-			reqModel = new ImageIcon(ImageIO.read(new FileInputStream("Resources/" + scenario + "/reqModel.png")));
+			reqModel = new ImageIcon(ImageIO.read(new FileInputStream("../Resources/" + scenario + "/reqModel.png")));
 		} catch (FileNotFoundException e) {
 			System.out.println("[ERROR] "); e.printStackTrace();
 		} catch (IOException e) {
@@ -58,7 +58,7 @@ public class Model {
 	public static ImageIcon getProcModelTemporary(int scenario) {
 		ImageIcon procModel = null;
 		try {
-			procModel = new ImageIcon(ImageIO.read(new FileInputStream("Resources/" + scenario + "/procModel.png")));
+			procModel = new ImageIcon(ImageIO.read(new FileInputStream("../Resources/" + scenario + "/procModel.png")));
 		} catch (FileNotFoundException e) {
 			System.out.println("[ERROR] "); e.printStackTrace();
 		} catch (IOException e) {
@@ -72,8 +72,10 @@ public class Model {
 	 */
 	public static ImageIcon getScheduleTemporary(int scenario) {
 		ImageIcon schedule = null;
+		FileInputStream fileS;
 		try {
-			schedule = new ImageIcon(ImageIO.read(new FileInputStream("Resources/" + scenario + "/schedule.png")));
+			fileS = new FileInputStream("../Resources/" + scenario + "/schedule.png");
+			schedule = new ImageIcon(ImageIO.read(fileS));
 		} catch (FileNotFoundException e) {
 			System.out.println("[ERROR] "); e.printStackTrace();
 		} catch (IOException e) {
@@ -88,7 +90,7 @@ public class Model {
 	public static ImageIcon getOrgChartTemporary(int scenario) {
 		ImageIcon orgChart = null;
 		try {
-			orgChart = new ImageIcon(ImageIO.read(new FileInputStream("Resources/" + scenario + "/orgChart.png")));
+			orgChart = new ImageIcon(ImageIO.read(new FileInputStream("../Resources/" + scenario + "/orgChart.png")));
 		} catch (FileNotFoundException e) {
 			System.out.println("[ERROR] "); e.printStackTrace();
 		} catch (IOException e) {

@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -49,6 +50,7 @@ public class ResultView extends JFrame {
 	/* * * * * C O N S T R U C T O R * * * * */
 	
 	public ResultView(Controller c) {
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.controller = c;
@@ -57,18 +59,21 @@ public class ResultView extends JFrame {
 		layout = new SpringLayout();
 		
 		previousQuestionsPanel = new JPanel();
+		previousQuestionsPanel.setBackground(new Color(204, 204, 255));
 		previousQuestionsScroll = new JScrollPane(previousQuestionsPanel);
 		layout.putConstraint(SpringLayout.WEST, previousQuestionsScroll, 479, SpringLayout.WEST, panel);
 		layout.putConstraint(SpringLayout.SOUTH, previousQuestionsScroll, -10, SpringLayout.SOUTH, panel);
 		layout.putConstraint(SpringLayout.EAST, previousQuestionsScroll, -10, SpringLayout.EAST, panel);
 		previousQuestionsLayout = new BoxLayout(previousQuestionsPanel, BoxLayout.Y_AXIS);
+		previousQuestionsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		previousQuestionsScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		this.setSize(1000,600);
 		this.setResizable(false);
 
 		//setUpFrame();
-
-	}
+	}	
+		
 	private void setUpFrame() {
 		/* General things to do. */
 		setContentPane(panel);
@@ -191,7 +196,7 @@ public class ResultView extends JFrame {
 		}
 		
 		
-		JButton btnPlanning = new JButton("Planning");
+		JButton btnPlanning = new JButton("Schedule");
 		layout.putConstraint(SpringLayout.NORTH, imageP, -90, SpringLayout.NORTH, btnPlanning);
 		layout.putConstraint(SpringLayout.WEST, imageP, 0, SpringLayout.WEST, btnPlanning);
 		layout.putConstraint(SpringLayout.SOUTH, imageP, -10, SpringLayout.NORTH, btnPlanning);
@@ -200,8 +205,8 @@ public class ResultView extends JFrame {
 		layout.putConstraint(SpringLayout.WEST, btnPlanning, 0, SpringLayout.WEST, btnDownload);
 		btnPlanning.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TO DO.
-			}
+				controller.displayResource(Resource.Schedule);
+				}
 		});
 		panel.add(btnPlanning);
 		
@@ -214,9 +219,8 @@ public class ResultView extends JFrame {
 		layout.putConstraint(SpringLayout.WEST, btnModels, 74, SpringLayout.WEST, panel);
 		btnModels.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TO DO.
-			}
-		});
+				controller.displayResource(Resource.ProcModel); 
+		}});
 		panel.add(btnModels);
 		
 		btnOrganizationnalChart = new JButton("Organizationnal chart");
@@ -228,7 +232,7 @@ public class ResultView extends JFrame {
 		layout.putConstraint(SpringLayout.EAST, btnOrganizationnalChart, -27, SpringLayout.WEST, previousQuestionsScroll);
 		btnOrganizationnalChart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TO DO.
+				controller.displayResource(Resource.Chart);
 			}
 		});
 		panel.add(btnOrganizationnalChart);
@@ -242,16 +246,16 @@ public class ResultView extends JFrame {
 		layout.putConstraint(SpringLayout.WEST, btnRequirements, 56, SpringLayout.WEST, panel);
 		btnRequirements.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TO DO.
-			}
+				controller.displayResource(Resource.ReqList);
+				}
 		});
 		panel.add(btnRequirements);
 		
 		// Creation of a list of previous Q & A.
 		if(listQA.values() != null) {
 			for(String question : listQA.keySet()) {
-				JLabel newQuestion = new JLabel(question);
-				JLabel newAnswer = new JLabel(">>> " + listQA.get(question) + "\n");
+				JLabel newQuestion = new JLabel("<html>" + question + "<html>");
+				JLabel newAnswer = new JLabel("<html> >>> " + listQA.get(question) + "\n <html>");
 				previousQuestionsPanel.add(newQuestion);
 				previousQuestionsPanel.add(newAnswer);
 				previousQuestionsPanel.revalidate();

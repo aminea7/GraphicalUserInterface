@@ -91,10 +91,10 @@ public class ExpertSystem {
 		try { 
 		   	FileWriter fw = new FileWriter(file, false); 
 		  	BufferedWriter output = new BufferedWriter(fw); 
-		  	System.out.println("[DEBUG] Writing in knowledge.pl : ");
+		  	//System.out.println("[DEBUG] Writing in knowledge.pl : ");
 		  	for(int i = 0; i < NBCRITERIA; i++) {
 		  		output.write(this.knowledge[0][i] + "(" + this.knowledge[1][i] + ").\n");
-		  		System.out.println("\t" + this.knowledge[0][i] + "(" + this.knowledge[1][i] + ").");
+		  		//System.out.println("\t" + this.knowledge[0][i] + "(" + this.knowledge[1][i] + ").");
 	    	 }
 		  	output.flush(); 
 		  	output.close(); 

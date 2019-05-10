@@ -3,16 +3,18 @@ package Application;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
 import gnu.prolog.demo.mentalarithmetic.NoAnswerException;
 import gnu.prolog.vm.PrologException;
 import net.sf.mpxj.ProjectFile;
 
+enum Language{FR,EN};
+enum View{Welcome, Question, Result, Resources};
+enum Resource{Schedule, Chart, ReqList, ReqModel, ProcModel};
 
 public class Controller {
 	int NUMBER_OF_RESOURCES = 5;
-	enum Language{FR,EN};
-	enum View{Welcome, Question, Result, Resources};
-	enum Resource{Schedule, Chart, ReqList, ReqModel, ProcModel};
 
 	/* * * * * A T T R I B U T E S * * * * */
 		
@@ -34,12 +36,13 @@ public class Controller {
 	private Model model;
 	private View currentView;
 	
+	private int scenario;
+	
 	/* * * * * C O N S T R U C T O R * * * * */
 	
 	public Controller() {
 		expertSystem = new ExpertSystem();
 		welcomeView = new WelcomeView(this);
-		resourcesView = new ResourcesView(this);
 		model = new Model();
 		//answers = new HashMap<String,String>();
 		resources = new String[NUMBER_OF_RESOURCES];
@@ -78,16 +81,16 @@ public class Controller {
 			String keyAnswer = getKeyWithString(stringAnswer);
 			expertSystem.setKnowledge(keyCurrentQuestion, keyAnswer);
 			String result = expertSystem.reason();
-			System.out.println(result);
+			//System.out.println(result);
 			boolean scenarioFound = result.matches("\\d+");
 			//When the questionnaire is finished
 			if(scenarioFound) {
-				int scenario = Integer.parseInt(result);
+				scenario = Integer.parseInt(result);
 				System.out.println("[DEBUG] scenario = " + scenario);
 				//Retrieving the resources
 				//Can be displayed using :
 				//http://www.mpxj.org/apidocs/net/sf/mpxj/explorer/ProjectFilePanel.html
-				schedule = Model.getSchedule(scenario);
+				//schedule = Model.getSchedule(scenario);
 				//Displaying resultView
 				questionView.closeQuestionView();
 				resultView = new ResultView(this);
@@ -145,6 +148,8 @@ public class Controller {
 			resourcesView.closeResourcesView();
 			break;
 		default:
+			resultView.closeResultView();
+			System.out.println("TEEEEST");
 			break;
 		}
 		//Opens welcome view and resets questionnaire
@@ -206,28 +211,40 @@ public class Controller {
 	//Used by result view when choosing to display one of the resources
 	public String displayResource(Resource r) {
 		String ret = "";
+		ImageIcon img = null;
 		switch (r) {
 		case Schedule:
-			ret = resources[0];
+			ret = "Schedule";
+			img = Model.getScheduleTemporary(scenario);
 			break;
 		case Chart:
-			ret = resources[1];
+			ret = "Organization chart";
+			img = Model.getOrgChartTemporary(scenario);
 			break;
 		case ReqList:
-			ret = resources[2];
+			ret = "Requirements list";
+			img = Model.getReqListTemporary(scenario);
 			break;
 		case ReqModel:
-			ret = resources[3];
+			ret = "Requirements model";
+			img = Model.getReqModelTemporary(scenario);
 			break;
 		case ProcModel:
-			ret = resources[4];
+			ret = "Processes model";
+			img = Model.getProcModelTemporary(scenario);
 			break;
 		}
+		resourcesView = new ResourcesView(this);
+		resourcesView.startResourcesView(ret, img);
+		resultView.closeResultView();
+		currentView = View.Resources;
 		return ret;
 	}
 	
 	public void backToResults() {
 		resourcesView.closeResourcesView();
+		
+		resultView = new ResultView(this);
 		resultView.startResultView(getStrings());
 		currentView = View.Result;
 	}
